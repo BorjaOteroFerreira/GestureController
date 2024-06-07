@@ -11,9 +11,9 @@ GestureController is a Python tool that allows you to control your computer usin
 ## Installation
 1. Clone this repository to your local machine.
 2. Install the required dependencies using pip:
-'''bash
+```bash
 pip install -r requirements.txt
-'''
+```
 
 ## Usage
 1. Run the `app.py` script.
