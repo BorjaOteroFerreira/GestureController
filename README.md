@@ -11,7 +11,7 @@ GestureController is a Python tool that allows you to control your computer usin
 ## Installation
 1. Clone this repository to your local machine.
 2. Install the required dependencies using pip:
-    pip install -r requirements.txt
+pip install -r requirements.txt
 
 
 ## Usage
@@ -20,9 +20,18 @@ GestureController is a Python tool that allows you to control your computer usin
 3. Perform the supported gestures, such as opening your hands or tilting your head.
 4. See the corresponding keyboard inputs being triggered based on your gestures.
 
+
 ## Supported Gestures
-- Opening hands: Simulates pressing designated keys.
-- Tilting head: Controls directional input, such as steering in games or navigating interfaces.
+- **Opening hands:** Simulates pressing designated keys.
+- **Closing hands:** Simulates releasing designated keys.
+- **Raising one hand:** Triggers a specific action, such as pausing or resuming a video.
+- **Tilting head left or right:** Controls directional input, such as steering in games or navigating interfaces.
+- **Blinking:** Triggers a specific action, such as taking a screenshot or opening a menu.
+- **Smiling:** Initiates a predefined action, such as changing the volume or switching between applications.
+- **Opening mouth:** Simulates pressing a key for actions like shooting in a game or capturing an image.
+- **Making a peace sign:** Initiates a specific action, such as starting a video call or muting/unmuting the microphone.
+- **Waving:** Triggers an action, such as scrolling through a document or switching tabs in a browser.
+
 
 ## Customization
 You can customize the mapping of gestures to keyboard inputs by modifying the configuration in the `app.py` script. Additionally, you can adjust sensitivity and other parameters to fine-tune the gesture detection.
