@@ -2,6 +2,10 @@
 
 GestureController is a Python tool that allows you to control your computer using hand and face gestures captured by your webcam. By detecting various gestures, such as hand movements and facial expressions, GestureController translates them into keyboard inputs, allowing you to interact with your computer in a hands-free manner.
 
+**currently** designed to simulate keyboard inputs for gaming purposes, serving as an alternative to traditional controllers for games like Mario Kart. The implemented gestures translate to keyboard key presses, allowing you to control in-game actions through hand and face gestures captured by your webcam.
+Please note that while the current focus is on gaming controls, future updates may include additional functionalities such as opening applications, scrolling through documents, and navigating the desktop interface. These enhancements aim to provide a more comprehensive hands-free interaction experience beyond gaming.
+Your feedback and suggestions are valuable as we continue to develop and improve GestureController to meet a broader range of user needs and applications.
+
 ## Features
 - Control your computer using hand and face gestures.
 - Detects gestures such as opening hands, tilting head, and more.
@@ -23,15 +27,11 @@ pip install -r requirements.txt
 
 
 ## Supported Gestures
-- **Opening hands:** Simulates pressing designated keys.
-- **Closing hands:** Simulates releasing designated keys.
-- **Raising one hand:** Triggers a specific action, such as pausing or resuming a video.
+- **Opening hands:** Asign 1 key for hand , you can prees one key for hand.
+- **Closing hands:** Simulates releasing designated keys for hands.
+- **Put hands Toghetter:** Triggers a specific key.
 - **Tilting head left or right:** Controls directional input, such as steering in games or navigating interfaces.
-- **Blinking:** Triggers a specific action, such as taking a screenshot or opening a menu.
-- **Smiling:** Initiates a predefined action, such as changing the volume or switching between applications.
 - **Opening mouth:** Simulates pressing a key for actions like shooting in a game or capturing an image.
-- **Making a peace sign:** Initiates a specific action, such as starting a video call or muting/unmuting the microphone.
-- **Waving:** Triggers an action, such as scrolling through a document or switching tabs in a browser.
 
 
 ## Customization
