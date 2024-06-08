@@ -42,6 +42,7 @@ You can customize the mapping of gestures to keyboard inputs by modifying the co
 - Python 3.x
 - OpenCV
 - Mediapipe
+- Keyboard
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
