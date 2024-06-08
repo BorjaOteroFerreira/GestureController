@@ -1,23 +1,14 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import json
-import gestures.GestureController as Gc
-import gestures.HandsTogether as Ht
-import gestures.OpenHand as Oh
-import gestures.OpenMouth as Om
-import gestures.HeadTilt as Het
-
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
-import json
-import gestures.GestureController as Gc
-import gestures.HandsTogether as Ht
-import gestures.OpenHand as Oh
-import gestures.OpenMouth as Om
-import gestures.HeadTilt as Het
 import cv2
 from PIL import Image, ImageTk
-
+import mediapipe as mp
+import gestures.HandsTogether as Ht
+import gestures.OpenHand as Oh
+import gestures.OpenMouth as Om
+import gestures.HeadTilt as Het
+import gestures.GestureController as Gc
 class GestureApp:
     def __init__(self, root):
         self.root = root
@@ -33,7 +24,6 @@ class GestureApp:
         self.root.configure(bg=self.bg_color)
         self.style = ttk.Style()
         self.style.theme_use("clam")
-
         self.style.configure("TFrame", background=self.bg_color, borderwidth=0)
         self.style.configure("TLabel", background=self.bg_color, foreground=self.fg_color, borderwidth=0)
         self.style.configure("TButton", background=self.widget_bg, foreground=self.fg_color, borderwidth=1, relief="flat")
@@ -42,17 +32,17 @@ class GestureApp:
         self.style.map("TCombobox", fieldbackground=[("readonly", self.widget_bg)], selectbackground=[("readonly", self.widget_bg)], selectforeground=[("readonly", self.fg_color)])
         self.style.configure("TEntry", fieldbackground=self.widget_bg, foreground=self.fg_color, borderwidth=1, relief="flat")
         self.style.configure("TScrollbar", background=self.bg_color, troughcolor=self.widget_bg)
-
         self.controller = Gc.GestureController()
 
         self.gestures = {
             "OpenMouth": {"class": Om.OpenMouth, "params": ["Button"]},
             "HandsTogether": {"class": Ht.HandsTogether, "params": ["Button"]},
-            "OpenHand": {"class": Oh.OpenHand, "params": ["Left_hand", "Right hand"]},
+            "OpenHand": {"class": Oh.OpenHand, "params": ["Left hand", "Right hand"]},
             "HeadTilt": {"class": Het.HeadTilt, "params": ["Left side", "Right side"]},
         }
 
         self.selected_gestures = []
+        self.camera_running = False
         self.create_widgets()
 
     def create_widgets(self):
@@ -102,63 +92,68 @@ class GestureApp:
         self.clear_button = ttk.Button(control_frame, text="Clear All", command=self.clear_all, style="TButton")
         self.clear_button.grid(row=4, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
 
+        # Cámara y visualización
+        self.camera_label = ttk.Label(control_frame)
+        self.camera_label.grid(row=5, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
+
+        self.camera_selector = ttk.Combobox(control_frame, values=["Camera 0", "Camera 1"], style="TCombobox")
+        self.camera_selector.grid(row=6, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
+        self.camera_selector.current(0)
 
     def on_gesture_selected(self, event):
         for widget in self.param_frame.winfo_children():
             widget.destroy()
-
+        
         gesture_name = self.gesture_selector.get()
-        if gesture_name:
-            params = self.gestures[gesture_name]["params"]
-            for i, param in enumerate(params):
-                label = ttk.Label(self.param_frame, text=f"{param.capitalize()}:")
-                label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
-                entry = ttk.Entry(self.param_frame)
-                entry.grid(row=i, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
-                self.param_frame.columnconfigure(1, weight=1)
+        params = self.gestures[gesture_name]["params"]
+        self.param_vars = []
+
+        for param in params:
+            label = ttk.Label(self.param_frame, text=param, style="TLabel")
+            label.grid(row=params.index(param), column=0, padx=5, pady=5)
+            entry = ttk.Entry(self.param_frame, style="TEntry")
+            entry.grid(row=params.index(param), column=1, padx=5, pady=5)
+            self.param_vars.append(entry)
 
     def add_gesture(self):
-        selected_gesture = self.gesture_selector.get()
-        params = [entry.get() for entry in self.param_frame.winfo_children() if isinstance(entry, ttk.Entry)]
-
-        if selected_gesture and selected_gesture not in self.selected_gestures and all(params):
-            self.selected_gestures.append(selected_gesture)
-            gesture_class = self.gestures[selected_gesture]["class"]
-
-            if len(params) == 1:
-                gesture = gesture_class(params[0])
-                self.gesture_listbox.insert(tk.END, f"{selected_gesture} ({params[0]})")
-            else:
-                gesture = gesture_class(*params)
-                self.gesture_listbox.insert(tk.END, f"{selected_gesture} ({', '.join(params)})")
-
-            self.controller.add_gesture(gesture)
+        gesture_name = self.gesture_selector.get()
+        params = [entry.get() for entry in self.param_vars]
+        gesture_class = self.gestures[gesture_name]["class"]
+        if len(params) == 1:
+            gesture = gesture_class(params[0])
+            self.gesture_listbox.insert(tk.END, f"{gesture_name} ({params[0]})")
+        else:
+            gesture = gesture_class(*params)
+            self.gesture_listbox.insert(tk.END, f"{gesture_name} ({', '.join(params)})")
+        self.selected_gestures.append(gesture)
+        self.controller.add_gesture(gesture)
 
     def remove_gesture(self):
-        selected_indices = self.gesture_listbox.curselection()
-        for index in selected_indices[::-1]:  # Remove from the end to avoid index shifting
-            gesture_name = self.gesture_listbox.get(index).split(" ")[0]
-            self.selected_gestures.remove(gesture_name)
+        selected_index = self.gesture_listbox.curselection()
+        if selected_index:
+            index = selected_index[0]
             self.gesture_listbox.delete(index)
-            # Here, you would also need to remove the gesture from the controller if needed
+            del self.selected_gestures[index]
+            self.controller.gestures.pop(index)
 
     def clear_all(self):
         self.gesture_listbox.delete(0, tk.END)
-        self.selected_gestures.clear()
-        self.controller = Gc.GestureController()  # Reset the controller
+        self.selected_gestures = []
+        self.controller = Gc.GestureController()  # Reinicia el controlador
 
     def save_config(self):
         config = []
         for gesture in self.selected_gestures:
             index = self.selected_gestures.index(gesture)
             params = self.gesture_listbox.get(index).split("(")[1][:-1].split(", ")
-            config.append({"gesture": gesture, "params": params})
+            config.append({"gesture": gesture.__class__.__name__, "params": params})
 
         file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
         if file_path:
             with open(file_path, 'w') as f:
                 json.dump(config, f)
             messagebox.showinfo("Save Config", "Configuration saved successfully")
+
     def load_config(self):
         file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
         if file_path:
@@ -166,8 +161,8 @@ class GestureApp:
                 config = json.load(f)
 
             self.gesture_listbox.delete(0, tk.END)
-            self.selected_gestures.clear()
-            self.controller = Gc.GestureController()  # Reset the controller
+            self.selected_gestures = []
+            self.controller = Gc.GestureController()  # Reinicia el controlador
 
             for item in config:
                 gesture_name = item["gesture"]
@@ -181,17 +176,44 @@ class GestureApp:
                     gesture = gesture_class(*params)
                     self.gesture_listbox.insert(tk.END, f"{gesture_name} ({', '.join(params)})")
 
-                self.selected_gestures.append(gesture_name)
+                self.selected_gestures.append(gesture)
                 self.controller.add_gesture(gesture)
 
             messagebox.showinfo("Load Config", "Configuration loaded successfully")
 
     def start_controller(self):
-        self.controller.run()
+        selected_camera = self.camera_selector.get()
+        if selected_camera:
+            camera_index = int(selected_camera.split()[1])
+            self.start_camera_preview(camera_index)
+        self.controller.start()
+        self.update_camera_preview()
+
+    def start_camera_preview(self, camera_index):
+        self.cap = cv2.VideoCapture(camera_index)
+        self.camera_running = True
+
+    def update_camera_preview(self):
+        if self.camera_running and self.cap.isOpened():
+            ret, frame = self.cap.read()
+            if ret:
+                frame = self.controller.process_frame(frame)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(frame)
+                img = ImageTk.PhotoImage(image=img)
+                self.camera_label.config(image=img)
+                self.camera_label.image = img
+            if self.camera_running:
+                self.root.after(10, self.update_camera_preview)
 
     def stop_controller(self):
-        # Add functionality to stop the controller if possible
-        pass
+        self.camera_running = False
+        if self.cap is not None and self.cap.isOpened():
+            self.cap.release()
+            self.cap = None
+        self.controller.stop()
+        self.camera_label.config(image='')
+        self.camera_label.image = None
 
 if __name__ == "__main__":
     root = tk.Tk()
