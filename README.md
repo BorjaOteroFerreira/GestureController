@@ -2,7 +2,7 @@
 
 GestureController is a Python tool that allows you to control your computer using hand and face gestures captured by your webcam. By detecting various gestures, such as hand movements and facial expressions, GestureController translates them into keyboard inputs, allowing you to interact with your computer in a hands-free manner.
 
-**currently** designed to simulate keyboard inputs for gaming purposes, serving as an alternative to traditional controllers for games or emulators. The implemented gestures translate to keyboard key presses, allowing you to control in-game actions through hand and face gestures captured by your webcam.
+**Currently** designed to simulate keyboard inputs for gaming purposes, serving as an alternative to traditional controllers for games or emulators. The implemented gestures translate to keyboard key presses, allowing you to control in-game actions through hand and face gestures captured by your webcam.
 Please note that while the current focus is on gaming controls, future updates may include additional functionalities such as opening applications, scrolling through documents, and navigating the desktop interface. These enhancements aim to provide a more comprehensive hands-free interaction experience beyond gaming.
 Your feedback and suggestions are valuable as we continue to develop and improve GestureController to meet a broader range of user needs and applications.
 
