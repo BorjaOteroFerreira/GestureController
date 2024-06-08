@@ -1,13 +1,6 @@
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
-import json
 import cv2
-from PIL import Image, ImageTk
 import mediapipe as mp
-import gestures.HandsTogether as Ht
-import gestures.OpenHand as Oh
-import gestures.OpenMouth as Om
-import gestures.HeadTilt as Het
+
 
 class GestureController:
     def __init__(self):

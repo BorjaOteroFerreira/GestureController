@@ -9,6 +9,7 @@ import gestures.OpenHand as Oh
 import gestures.OpenMouth as Om
 import gestures.HeadTilt as Het
 import gestures.GestureController as Gc
+
 class GestureApp:
     def __init__(self, root):
         self.root = root
@@ -40,7 +41,6 @@ class GestureApp:
             "OpenHand": {"class": Oh.OpenHand, "params": ["Left hand", "Right hand"]},
             "HeadTilt": {"class": Het.HeadTilt, "params": ["Left side", "Right side"]},
         }
-
         self.selected_gestures = []
         self.camera_running = False
         self.create_widgets()
