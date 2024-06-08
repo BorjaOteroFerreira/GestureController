@@ -14,11 +14,13 @@ HEAD_LEFT = 'a'         #TURN LEFT (PAD)
 HEAD_RIGHT = 'd'        #TURN RIGHT (PAD)
 
 
-# Inicializar el controlador de gestos
+# Initialize the gesture controller
+
 controller = Gc.GestureController()
 controller.add_gesture(Om.OpenMouth(OPEN_MOUTH))
 controller.add_gesture(Ht.HandsTogether(HANDS_TOGHETTER))
 controller.add_gesture(Oh.OpenHand(OPEN_LEFT_HAND,OPEN_RIGHT_HAND))
 controller.add_gesture(Het.HeadTilt(HEAD_LEFT, HEAD_RIGHT))
-# Ejecutar el controlador
+
+#Run gesture controller
 controller.run()
