@@ -4,7 +4,7 @@ import gestures.OpenHand as Oh
 import gestures.OpenMouth as Om
 import gestures.HeadTilt as Het 
 
-# Template to Mario Kart double Dash (Dolphin Emulator)
+# Template to Monkey Ball Gc (Dolphin Emulator)
 
 OPEN_MOUTH = 'c'        #LAUNCH ITEMS
 HANDS_TOGHETTER = 'v'   #SWAP CHARACTERS
