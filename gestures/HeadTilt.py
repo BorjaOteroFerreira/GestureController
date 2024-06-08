@@ -5,7 +5,7 @@ import mediapipe as mp
 from gestures.Gesture import Gesture
 
 class HeadTilt(Gesture):
-    def __init__(self, key_left, key_right, threshold_angle=10):
+    def __init__(self, key_left, key_right, threshold_angle=84):
         super().__init__()
         self.threshold_angle = threshold_angle
         self.key_left = key_left
@@ -33,9 +33,9 @@ class HeadTilt(Gesture):
 
                     angle_deg = math.degrees(math.atan(slope))
 
-                    if -84 < angle_deg < -1:
+                    if (self.threshold_angle * -1) < angle_deg < -1:
                         direction = 'left'
-                    elif 1 < angle_deg < 84:
+                    elif 1 < angle_deg < self.threshold_angle:
                         direction = 'right'
                     else:
                         direction = None

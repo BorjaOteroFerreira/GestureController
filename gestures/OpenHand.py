@@ -39,7 +39,8 @@ class OpenHand(Gesture):
 
         self.draw_landmarks(frame, results_face, results_hands)
 
-    def _is_hand_open(self, hand_landmarks):
+    @staticmethod
+    def _is_hand_open(hand_landmarks):
         thumb_tip = hand_landmarks.landmark[mp.solutions.hands.HandLandmark.THUMB_TIP]
         index_finger_tip = hand_landmarks.landmark[mp.solutions.hands.HandLandmark.INDEX_FINGER_TIP]
         middle_finger_tip = hand_landmarks.landmark[mp.solutions.hands.HandLandmark.MIDDLE_FINGER_TIP]
@@ -50,9 +51,4 @@ class OpenHand(Gesture):
                 ring_finger_tip.y < thumb_tip.y or
                 pinky_tip.y < thumb_tip.y)
 
-    def draw_landmarks(self, frame, results_face, results_hands):
-        if results_hands.multi_hand_landmarks:
-            for hand_landmarks in results_hands.multi_hand_landmarks:
-                self.mp_drawing.draw_landmarks(
-                    frame, hand_landmarks, mp.solutions.hands.HAND_CONNECTIONS,
-                    landmark_drawing_spec=self.mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=4))
+

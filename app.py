@@ -14,7 +14,6 @@ class GestureApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Gesture Controller")
-        
         # Dark theme colors
         self.bg_color = "#2e2e2e"
         self.fg_color = "#f5f5f5"
@@ -126,7 +125,7 @@ class GestureApp:
             gesture = gesture_class(*params)
             self.gesture_listbox.insert(tk.END, f"{gesture_name} ({', '.join(params)})")
         self.selected_gestures.append(gesture)
-        self.controller._add_gesture(gesture)
+        self.controller.add_gesture(gesture)
 
     def _remove_gesture(self):
         selected_index = self.gesture_listbox.curselection()
@@ -177,7 +176,7 @@ class GestureApp:
                     self.gesture_listbox.insert(tk.END, f"{gesture_name} ({', '.join(params)})")
 
                 self.selected_gestures.append(gesture)
-                self.controller._add_gesture(gesture)
+                self.controller.add_gesture(gesture)
 
             messagebox.showinfo("Load Config", "Configuration loaded successfully")
 

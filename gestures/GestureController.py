@@ -1,7 +1,6 @@
 import cv2
 import mediapipe as mp
 
-
 class GestureController:
     def __init__(self):
         self.gestures = []
