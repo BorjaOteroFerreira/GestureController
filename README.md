@@ -15,6 +15,7 @@ Your feedback and suggestions are valuable as we continue to develop and improve
 ## Installation
 1. Clone this repository to your local machine.
 2. Install the required dependencies using pip:
+
 ```bash
 pip install -r requirements.txt
 ```
