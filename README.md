@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 
 ## Supported Gestures
-- **Opening hands:** Asign 1 key for hand , you can prees one key for hand.
+- **Opening hands:** Asign one key for hand , you can prees one key open your hand.
 - **Closing hands:** Simulates releasing designated keys for hands.
 - **Put hands Toghetter:** Triggers a specific key.
 - **Tilting head left or right:** Controls directional input, such as steering in games or navigating interfaces.
@@ -44,8 +44,11 @@ You can customize the mapping of gestures to keyboard inputs. Additionally, you 
 ## Requirements
 - Python 3.x
 - OpenCV
-- Mediapipe
+- Mediapipe 
 - Keyboard
+- Pyautogui
+- Tkinter
+- Pillow
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
