@@ -9,6 +9,7 @@ import gestures.OpenHand as Oh
 import gestures.OpenMouth as Om
 import gestures.HeadTilt as Het
 import gestures.GestureController as Gc
+import gestures.MouseHands as Mh
 
 class GestureApp:
     def __init__(self, root):
@@ -39,6 +40,7 @@ class GestureApp:
             "HandsTogether": {"class": Ht.HandsTogether, "params": ["Button"]},
             "OpenHand": {"class": Oh.OpenHand, "params": ["Left hand", "Right hand"]},
             "HeadTilt": {"class": Het.HeadTilt, "params": ["Left side", "Right side"]},
+            "MouseHands": {"class" : Mh.MouseHands, "params": []}
         }
         self.selected_gestures = []
         self.camera_running = False
@@ -49,52 +51,53 @@ class GestureApp:
         frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
-
+        #Gesture ListBox
         self.gesture_listbox = tk.Listbox(frame, height=15, bg=self.widget_bg, fg=self.fg_color, selectbackground=self.highlight_color, selectforeground=self.fg_color, bd=0, relief="flat")
         self.gesture_listbox.grid(row=0, column=0, rowspan=7, padx=10, pady=10, sticky=(tk.N, tk.S, tk.E, tk.W))
-        
+        #Scrollbar Gesture ListBox
         scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=self.gesture_listbox.yview)
         self.gesture_listbox.configure(yscrollcommand=scrollbar.set)
         scrollbar.grid(row=0, column=1, rowspan=7, sticky=(tk.N, tk.S))
-
+        #Gesture Frame
         gesture_frame = ttk.Frame(frame, borderwidth=1, relief="flat")
         gesture_frame.grid(row=0, column=2, padx=10, pady=10, sticky=(tk.W, tk.E))
-
+        #Gesture Select
         self.gesture_selector = ttk.Combobox(gesture_frame, values=list(self.gestures.keys()), state="readonly", style="TCombobox")
         self.gesture_selector.grid(row=0, column=0, padx=10, pady=10, sticky=(tk.W, tk.E))
         self.gesture_selector.bind("<<ComboboxSelected>>", self._on_gesture_selected)
-
+        #Parameter input
         self.param_frame = ttk.Frame(gesture_frame, borderwidth=1, relief="flat")
         self.param_frame.grid(row=1, column=0, padx=10, pady=10, sticky=(tk.W, tk.E))
-
+        #--BUTTONS--
+        #add
         self.add_button = ttk.Button(gesture_frame, text="Add Gesture", command=self._add_gesture, style="TButton")
         self.add_button.grid(row=2, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #remove 
         self.remove_button = ttk.Button(gesture_frame, text="Remove Gesture", command=self._remove_gesture, style="TButton")
         self.remove_button.grid(row=3, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #control frame flat
         control_frame = ttk.Frame(frame, borderwidth=1, relief="flat")
         control_frame.grid(row=1, column=2, rowspan=5, padx=10, pady=10, sticky=(tk.N, tk.S, tk.E, tk.W))
-
+        #start capture
         self.start_button = ttk.Button(control_frame, text="Start", command=self._start_controller, style="TButton")
         self.start_button.grid(row=0, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #stop capture
         self.stop_button = ttk.Button(control_frame, text="Stop", command=self._stop_controller, style="TButton")
         self.stop_button.grid(row=1, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #save actual config
         self.save_button = ttk.Button(control_frame, text="Save Config", command=self._save_config, style="TButton")
         self.save_button.grid(row=2, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #load config from json file
         self.load_button = ttk.Button(control_frame, text="Load Config", command=self._load_config, style="TButton")
         self.load_button.grid(row=3, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        #clear Gesture ListBox
         self.clear_button = ttk.Button(control_frame, text="Clear All", command=self._clear_all, style="TButton")
         self.clear_button.grid(row=4, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
-        # Cámara y visualización
+        #--Camera--
+        #Camera view label
         self.camera_label = ttk.Label(control_frame)
         self.camera_label.grid(row=5, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
-
+        # Camera Select
         self.camera_selector = ttk.Combobox(control_frame, values=["Camera 0", "Camera 1"], style="TCombobox")
         self.camera_selector.grid(row=6, column=0, padx=10, pady=5, sticky=(tk.W, tk.E))
         self.camera_selector.current(0)
@@ -138,7 +141,7 @@ class GestureApp:
     def _clear_all(self):
         self.gesture_listbox.delete(0, tk.END)
         self.selected_gestures = []
-        self.controller = Gc.GestureController()  # Reinicia el controlador
+        self.controller = Gc.GestureController()  # Reset controler
 
     def _save_config(self):
         config = []
@@ -161,7 +164,7 @@ class GestureApp:
 
             self.gesture_listbox.delete(0, tk.END)
             self.selected_gestures = []
-            self.controller = Gc.GestureController()  # Reinicia el controlador
+            self.controller = Gc.GestureController()  # Reset controller
 
             for item in config:
                 gesture_name = item["gesture"]
@@ -196,14 +199,17 @@ class GestureApp:
         if self.camera_running and self.cap.isOpened():
             ret, frame = self.cap.read()
             if ret:
+                # Voltear horizontalmente la imagen
+                frame = cv2.flip(frame, 1)
                 frame = self.controller.process_frame(frame)
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.resize(frame, (640, 480))  # Reducir la resolución
                 img = Image.fromarray(frame)
                 img = ImageTk.PhotoImage(image=img)
                 self.camera_label.config(image=img)
                 self.camera_label.image = img
             if self.camera_running:
-                self.root.after(10, self._update_camera_preview)
+                self.root.after(1, self._update_camera_preview) 
 
     def _stop_controller(self):
         self.camera_running = False

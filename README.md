@@ -11,6 +11,8 @@ Your feedback and suggestions are valuable as we continue to develop and improve
 - Detects gestures such as opening hands, tilting head, and more.
 - Customizable gesture mapping to keyboard inputs.
 - Real-time feedback and visualization of detected gestures.
+- Save and Load configuration (.Json files)
+- Load and remove gestures in real time
 
 ## Installation
 1. Clone this repository to your local machine.
@@ -33,10 +35,11 @@ pip install -r requirements.txt
 - **Put hands Toghetter:** Triggers a specific key.
 - **Tilting head left or right:** Controls directional input, such as steering in games or navigating interfaces.
 - **Opening mouth:** Simulates pressing a key for actions like shooting in a game or capturing an image.
+- **Mouse Hands:** Use your hands to control your mouse
 
 
 ## Customization
-You can customize the mapping of gestures to keyboard inputs by modifying the configuration in the `app.py` script. Additionally, you can adjust sensitivity and other parameters to fine-tune the gesture detection.
+You can customize the mapping of gestures to keyboard inputs. Additionally, you can adjust sensitivity and other parameters to fine-tune the gesture detection in the code . (TODO: implement this feature in the user interface)
 
 ## Requirements
 - Python 3.x
