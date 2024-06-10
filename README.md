@@ -54,4 +54,4 @@ You can customize the mapping of gestures to keyboard inputs. Additionally, you 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-- This project utilizes the [Mediapipe](https://google.github.io/mediapipe/) library for hand and face gesture recognition.
+- This project utilizes the [Mediapipe](https://github.com/google-ai-edge/mediapipe) library for hand and face gesture recognition.
